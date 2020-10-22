@@ -1,5 +1,6 @@
 ﻿using ASCReader;
 using ASCReader.Export;
+using MCUtils;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,25 +23,25 @@ namespace ASCReaderMC.PostProcessors {
 			decorStructures = new Dictionary<string, float>();
 		}
 
-		public void RunGenerator(MinecraftRegionExporter region, int x, int y, int z) {
-			if(region.GetBlock(x, y, z) != "minecraft:grass_block") return;
+		public void RunGenerator(MCUtils.World world, int x, int y, int z) {
+			if(world.GetBlock(x, y, z) != "minecraft:grass_block") return;
 			foreach(var k in mainStructures.Keys) {
-				if(rand.NextDouble() < mainStructures[k] && BuildStructure(k, region, x, y + 1, z)) return;
+				if(rand.NextDouble() < mainStructures[k] && BuildStructure(k, world, x, y + 1, z)) return;
 			}
 			foreach(var k in decorStructures.Keys) {
-				if(rand.NextDouble() < decorStructures[k] && BuildSingleBlock(k, region, x, y + 1, z)) return;
+				if(rand.NextDouble() < decorStructures[k] && BuildSingleBlock(k, world, x, y + 1, z)) return;
 			}
 		}
 
-		private bool BuildStructure(string s, MinecraftRegionExporter region, int x, int y, int z) {
+		private bool BuildStructure(string s, MCUtils.World world, int x, int y, int z) {
 			if(!structureDatas.ContainsKey(s)) {
 				RegisterStructure(s);
 			}
-			return structureDatas[s].Generate(region, x, y, z, rand);
+			return structureDatas[s].Generate(world, x, y, z, rand);
 		}
 
-		private bool BuildSingleBlock(string s, MinecraftRegionExporter region, int x, int y, int z) {
-			region.SetBlock(x, y, z, s);
+		private bool BuildSingleBlock(string s, MCUtils.World world, int x, int y, int z) {
+			world.SetBlock(x, y, z, s);
 			return true;
 		}
 

@@ -1,5 +1,6 @@
 using ASCReader;
 using ASCReader.Import;
+using MCUtils;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -41,27 +42,27 @@ namespace ASCReaderMC.PostProcessors {
 			}
 		}
 
-		public override void ProcessSurface(MinecraftRegionExporter region, int x, int y, int z) {
+		public override void ProcessSurface(MCUtils.World world, int x, int y, int z) {
 			foreach(string map in maps.Keys) {
 				byte mappedValue = maps[map][x, z];
 				if(mappedValue > 0) {
-					MakeLayer(region, x, y, z, layers[mappedValue]);
+					MakeLayer(world, x, y, z, layers[mappedValue]);
 				}
 			}
 			if(waterSurfaceMap != null) {
 				for(byte y2 = waterSurfaceMap[x, z]; y2 > y; y2--) {
-					region.SetBlock(x, y2, z, waterBlock);
+					world.SetBlock(x, y2, z, waterBlock);
 				}
 			}
 			if(biomePostProcessor != null) {
-				biomePostProcessor.ProcessSurface(region, x, y, z);
+				biomePostProcessor.ProcessSurface(world, x, y, z);
 			}
 		}
 
-		private void MakeLayer(MinecraftRegionExporter region, int x, int y, int z, string[] blocks) {
+		private void MakeLayer(MCUtils.World world, int x, int y, int z, string[] blocks) {
 			for(int i = 0; i < blocks.Length; i++) {
-				if(!string.IsNullOrWhiteSpace(blocks[i]) && !region.IsAir(x, y, z)) {
-					region.SetBlock(x, y - i, z, blocks[i]);
+				if(!string.IsNullOrWhiteSpace(blocks[i]) && !world.IsAir(x, y, z)) {
+					world.SetBlock(x, y - i, z, blocks[i]);
 				}
 			}
 		}

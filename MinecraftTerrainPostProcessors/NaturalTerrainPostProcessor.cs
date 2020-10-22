@@ -1,3 +1,5 @@
+using MCUtils;
+
 namespace ASCReaderMC.PostProcessors {
 	public class NaturalTerrainPostProcessor : MinecraftTerrainPostProcessor {
 
@@ -7,27 +9,27 @@ namespace ASCReaderMC.PostProcessors {
 			waterLevel = fillWithWater ? 62 : -1;
 		}
 
-		public override void ProcessBlock(MinecraftRegionExporter region, int x, int y, int z) {
+		public override void ProcessBlock(MCUtils.World world, int x, int y, int z) {
 			//Make flat bedrock
 			if(y == 0) {
-				if(region.IsDefaultBlock(x, 0, z)) region.SetBlock(x, 0, z, "minecraft:bedrock");
+				if(world.IsDefaultBlock(x, 0, z)) world.SetBlock(x, 0, z, "minecraft:bedrock");
 			}
 			//Fill the terrain with water up to the waterLevel
 			if(y <= waterLevel) {
-				if(region.IsAir(x, y, z)) region.SetBlock(x, y, z, "minecraft:water");
+				if(world.IsAir(x, y, z)) world.SetBlock(x, y, z, "minecraft:water");
 			}
 		}
 
-		public override void ProcessSurface(MinecraftRegionExporter region, int x, int y, int z) {
+		public override void ProcessSurface(MCUtils.World world, int x, int y, int z) {
 			//Place grass on top & 3 layers of dirt below
 			if(y > waterLevel + 1) {
-				region.SetBlock(x, y, z, "minecraft:grass_block");
+				world.SetBlock(x, y, z, "minecraft:grass_block");
 				for(int i = 1; i < 4; i++) {
-					region.SetBlock(x, y - i, z, "minecraft:dirt");
+					world.SetBlock(x, y - i, z, "minecraft:dirt");
 				}
 			} else {
 				for(int i = 0; i < 4; i++) {
-					region.SetBlock(x, y - i, z, "minecraft:gravel");
+					world.SetBlock(x, y - i, z, "minecraft:gravel");
 				}
 			}
 		}

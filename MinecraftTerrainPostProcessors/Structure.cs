@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MCUtils;
+using System;
 using System.Collections.Generic;
 
 namespace ASCReaderMC.PostProcessors {
@@ -22,14 +23,14 @@ namespace ASCReaderMC.PostProcessors {
 		public byte trunkHeightMin;
 		public byte trunkHeightMax;
 
-		public bool Generate(MinecraftRegionExporter region, int x, int y, int z, Random r) {
+		public bool Generate(MCUtils.World world, int x, int y, int z, Random r) {
 			byte h = (byte)r.Next(trunkHeightMin, trunkHeightMax);
-			if(IsObstructed(region, x, y + h, z)) {
+			if(IsObstructed(world, x, y + h, z)) {
 				return false;
 			}
 			if(!string.IsNullOrWhiteSpace(trunkBlock) && trunkHeightMax > 0) {
 				for(int i = 0; i < h; i++) {
-					region.SetBlock(x, y + i, z, trunkBlock);
+					world.SetBlock(x, y + i, z, trunkBlock);
 				}
 			}
 			int xm = x - (int)Math.Floor((float)structureSizeX / 2);
@@ -41,7 +42,7 @@ namespace ASCReaderMC.PostProcessors {
 						if(d == 0) continue;
 						var b = blocks[d];
 						if(r.NextDouble() < b.prob) {
-							region.SetBlock(xm + x1, y + h + y1, zm + z1, b.block);
+							world.SetBlock(xm + x1, y + h + y1, zm + z1, b.block);
 						}
 					}
 				}
@@ -49,7 +50,7 @@ namespace ASCReaderMC.PostProcessors {
 			return true;
 		}
 
-		private bool IsObstructed(MinecraftRegionExporter region, int lx, int ly, int lz) {
+		private bool IsObstructed(MCUtils.World world, int lx, int ly, int lz) {
 			int x1 = lx - (int)Math.Floor(structureSizeX / 2f);
 			int x2 = lx + (int)Math.Ceiling(structureSizeX / 2f);
 			int y1 = ly;
@@ -63,7 +64,7 @@ namespace ASCReaderMC.PostProcessors {
 					int sx = 0;
 					for(int x = x1; x < x2; x++) {
 						if(structure[sx, sy, sz] == 0) continue; //Do not check this block if the result is nothing anyway
-						if(!region.IsAir(x, y, z) || !region.IsWithinBoundaries(x, y, z)) return true;
+						if(!world.IsAir(x, y, z) || !world.IsWithinBoundaries(x, y, z)) return true;
 						sx++;
 					}
 					sz++;

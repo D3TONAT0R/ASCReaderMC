@@ -1,3 +1,4 @@
+using MCUtils;
 using System;
 
 namespace ASCReaderMC.PostProcessors {
@@ -11,8 +12,8 @@ namespace ASCReaderMC.PostProcessors {
 			random = new Random();
 		}
 
-		public override void ProcessSurface(MinecraftRegionExporter region, int x, int y, int z) {
-			if(random.NextDouble() <= chance && region.IsAir(x, y + 1, z)) region.SetBlock(x, y + 1, z, "minecraft:torch");
+		public override void ProcessSurface(MCUtils.World world, int x, int y, int z) {
+			if(random.NextDouble() <= chance && world.IsAir(x, y + 1, z)) world.SetBlock(x, y + 1, z, "minecraft:torch");
 		}
 	}
 }

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace ASCReaderMC {
 
-	[PluginInfo("Minecraft Region Exporter")]
+	[PluginInfo("Minecraft Region Exporter v0.9.1")]
 	public class MCRegionExportHandler : ASCReaderExportHandler {
 
 		public override void AddCommands(List<ConsoleCommand> list) {
@@ -79,7 +79,7 @@ namespace ASCReaderMC {
 			}
 			try {
 				if(!filename.EndsWith(".mca")) filename += ".mca";
-				IExporter exporter = new MinecraftRegionExporter(importPath, grid, true, useSplatmaps);
+				IExporter exporter = new MCWorldExporter(importPath, grid, true, useSplatmaps);
 				ExportUtility.WriteFile(exporter, filename, ExportUtility.GetFormatFromIdenfifier("MCA"));
 				return true;
 			} catch(Exception e) {

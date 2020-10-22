@@ -1,3 +1,4 @@
+using MCUtils;
 using System;
 
 namespace ASCReaderMC.PostProcessors {
@@ -33,27 +34,23 @@ namespace ASCReaderMC.PostProcessors {
 		};
 		public float rarityMul = 1;
 
-		public override void ProcessBlock(MinecraftRegionExporter region, int x, int y, int z) {
+		public override void ProcessBlock(MCUtils.World world, int x, int y, int z) {
 			foreach(Ore o in ores) {
-				if(random.NextDouble() * rarityMul < o.spawnsPerBlock) SpawnOre(region, o, x, y, z);
+				if(random.NextDouble() * rarityMul < o.spawnsPerBlock) SpawnOre(world, o, x, y, z);
 			}
 		}
 
-		private void SpawnOre(MinecraftRegionExporter region, Ore ore, int x, int y, int z) {
+		private void SpawnOre(MCUtils.World world, Ore ore, int x, int y, int z) {
 			for(int i = 0; i < ore.veinSizeMax; i++) {
 				int x1 = x + RandomRange(-1, 1);
 				int y1 = y + RandomRange(-1, 1);
 				int z1 = z + RandomRange(-1, 1);
-				if(region.IsDefaultBlock(x1, y1, z1)) region.SetBlock(x1, y1, z1, ore.block);
+				if(world.IsDefaultBlock(x1, y1, z1)) world.SetBlock(x1, y1, z1, ore.block);
 			}
 		}
 
 		private int RandomRange(int min, int max) {
 			return random.Next(min, max + 1);
-		}
-
-		public override void OnFinish(MinecraftRegionExporter region) {
-
 		}
 	}
 }

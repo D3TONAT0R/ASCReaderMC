@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using MCUtils;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 
@@ -25,11 +26,11 @@ namespace ASCReaderMC.PostProcessors {
 			}*/
 		}
 
-		public override void ProcessSurface(MinecraftRegionExporter region, int x, int y, int z) {
+		public override void ProcessSurface(MCUtils.World world, int x, int y, int z) {
 			var id = maps["main"][x, z];
 			if(biomes.ContainsKey(id)) {
-				biomes[id].RunGenerator(region, x, y, z);
-				region.SetBiome(x, z, biomes[id].biomeID);
+				biomes[id].RunGenerator(world, x, y, z);
+				world.SetBiome(x, z, biomes[id].biomeID);
 			}
 		}
 	}
